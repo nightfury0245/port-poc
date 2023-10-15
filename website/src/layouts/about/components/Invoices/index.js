@@ -25,6 +25,8 @@ import MDButton from "components/MDButton";
 import Invoice from "layouts/about/components/Invoice";
 import PropTypes from "prop-types";
 
+import "./style.css";
+
 function Invoices({ data }) {
   Invoices.propTypes = {
     data: PropTypes.any,
@@ -36,9 +38,19 @@ function Invoices({ data }) {
         <MDTypography variant="h6" fontWeight="medium">
           Invoices
         </MDTypography>
-        <MDButton variant="outlined" color="info" size="small">
+        <MDButton variant="outlined" color="info" size="small" onclick="openPopup()">
           view all
         </MDButton>
+        <Card className="popup" id="popup">
+          <h2>added</h2>
+          <p>ya added it</p>
+          <MDButton variant="outlined" color="info" size="small" onclick="closePopup()">
+            OK
+          </MDButton>
+          <MDButton variant="outlined" color="info" size="small">
+            edit
+          </MDButton>
+        </Card>
       </MDBox>
       <MDBox p={2}>
         <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
@@ -51,6 +63,16 @@ function Invoices({ data }) {
       </MDBox>
     </Card>
   );
+}
+
+let popup = document.getElementById("popup");
+
+function openPopup() {
+  popup.classList.add("open-popup");
+}
+
+function closePopup() {
+  popup.classList.remove("open-popup");
 }
 
 export default Invoices;

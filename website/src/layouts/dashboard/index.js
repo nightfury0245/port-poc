@@ -35,14 +35,6 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 
-// React imports
-import { useEffect, useState } from "react";
-
-//axios import
-import httpClient from "httpClient";
-
-//config import
-import Config from "../../config.json";
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
 
@@ -50,7 +42,7 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
