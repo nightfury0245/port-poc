@@ -2,7 +2,7 @@ from flask import Flask,request,jsonify
 # from config import Config
 from mysql import connector
 import pandas as pd
-# import json
+import json
 
 def Dbconnect(dictionary):
     print("dictionary : ",dictionary)
@@ -59,7 +59,19 @@ def readVehicles():
     res = pd.read_sql_query("SELECT * FROM vehicledata",conn)
     return res.to_json(orient = 'records')
 
+@app.route('/getSampleJson',methods=['GET'])
+def sample_json():
+    lines = []
+    with open("./data/sample.json") as f:
+        lines = f.read()
+    return json.loads(lines)
+@app.route('/getAdvantages',methods=['GET'])
+def advantages_json():
+    lines = []
+    with open("./data/advantages.json") as f:
+        lines = f.read()
+    return json.loads(lines)
+
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
+    app.run(use_reloader=True,debug=True)   
+    
