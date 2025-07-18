@@ -25,16 +25,15 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import MasterCard from "examples/Cards/MasterCard";
 import DefaultInfoCard from "examples/Cards/InfoCards/DefaultInfoCard";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 
-// billing page components
-import PaymentMethod from "layouts/about/components/PaymentMethod";
-import Invoices from "layouts/about/components/Invoices";
-import billingInformation from "layouts/about/components/BillingInformation";
-import Transactions from "layouts/about/components/Transactions";
-import EcoInvoices from "./components/EcoInvoices";
-import EnvInvoices from "./components/EnvInvoices";
+import { useState, useEffect } from "react";
+import Truck from "./components/Truck";
+import WeighBridge from "./components/Weigh_Bridge";
+import Dock from "./components/Dock";
 
-function About() {
+function Live() {
   const Technical_Advantages = {
     "Improved Efficiency":
       "The system can optimize the flow of ships, cargo, and personnel within the port, reducing congestion and improving overall operational efficiency.",
@@ -71,58 +70,40 @@ function About() {
     "Sustainability Initiatives":
       "Ports that invest in congestion management systems can position themselves as leaders in sustainability and environmental responsibility, attracting environmentally conscious shipping companies and customers.",
   };
+  const tabData = [
+    { label: "Truck Data", value: "0", icon: "local_shipping" },
+    { label: "Weigh Bridge", value: "1", icon: "scale" },
+    { label: "Dock", value: "2", icon: "precision_manufacturing_outlined" },
+  ];
+  const [tabValue, setTabValue] = useState("0");
+
+  const handleChange = (value) => {
+    console.log(value);
+    setTabValue(value);
+  };
+
+  useEffect(() => {}, []);
+
   return (
     <DashboardLayout>
       <DashboardNavbar absolute isMini />
       <MDBox mt={8}>
-        <MDBox mb={3}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} lg={4}>
-              {/* <Grid container spacing={3}> */}
-              {/* <Grid item xs={12} lg={4}> */}
-              {/* <MasterCard number={4562112245947852} holder="jack peterson" expires="11/22" /> */}
-              <Invoices data={Technical_Advantages} />
-              {/* </Grid> */}
-              {/* <Grid item xs={12} md={6} xl={3}>
-                  <DefaultInfoCard
-                    icon="account_balance"
-                    title="salary"
-                    description="Belong Interactive"
-                    value="+$2000"
-                  />
-                </Grid> */}
-              {/* <Grid item xs={12} md={6} xl={3}>
-                  <DefaultInfoCard
-                    icon="paypal"
-                    title="paypal"
-                    description="Freelance Payment"
-                    value="$455.00"
-                  />
-                </Grid> */}
-              {/* </Grid> */}
-            </Grid>
-            <Grid item xs={12} lg={4}>
-              <EcoInvoices data={Economic_Advantages} />
-            </Grid>
-            <Grid item xs={12} lg={4}>
-              <EnvInvoices data={Environmental_Advantages} />
-            </Grid>
-          </Grid>
-        </MDBox>
-        {/* <MDBox mb={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={7}>
-              <billingInformation />
-            </Grid>
-            <Grid item xs={12} md={5}>
-              <Transactions />
-            </Grid>
-          </Grid>
-        </MDBox> */}
+        <Tabs value={tabValue} centered>
+          {tabData.map((item) => (
+            <Tab
+              key={item.value}
+              label={item.label}
+              value={item.value}
+              onClick={() => handleChange(item.value)}
+            />
+          ))}
+        </Tabs>
+        {tabValue === "0" && <Truck />}
+        {tabValue === "1" && <WeighBridge />}
+        {tabValue === "2" && <Dock />}
       </MDBox>
-      {/* <Footer /> */}
     </DashboardLayout>
   );
 }
 
-export default About;
+export default Live;

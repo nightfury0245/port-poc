@@ -1,8 +1,15 @@
+from flask_cors import CORS
 from flask import Flask,request,jsonify
 # from config import Config
 from mysql import connector
 import pandas as pd
 import json
+
+
+
+app = Flask(__name__)
+CORS(app)
+
 
 def Dbconnect(dictionary):
     print("dictionary : ",dictionary)
@@ -15,7 +22,6 @@ def Dbconnect(dictionary):
     mycur = mydb.cursor(dictionary = True) if dictionary else mydb.cursor()
     return mydb,mycur
 
-app = Flask(__name__)
 
 @app.route('/',methods=['GET','POST'])
 def home():
@@ -44,6 +50,7 @@ def insert():
     return '200 OK'
 
 @app.route('/updateStatus',methods=['POST','GET'])
+# %%
 def updateStatus():
     conn,cur = Dbconnect(dictionary = False)
     lpt = str(request.json["lpt"])
@@ -52,6 +59,7 @@ def updateStatus():
     cur.execute("UPDATE vehicledata SET status = %s WHERE Licence_Plate = %s and Waybill = %s",(status,lpt,wbl))
     conn.commit()
     return "200 OK"
+# %%
 
 @app.route("/getVehicles",methods=['GET'])
 def readVehicles():
@@ -71,6 +79,13 @@ def advantages_json():
     with open("./data/advantages.json") as f:
         lines = f.read()
     return json.loads(lines)
+@app.route('/getTrucks',methods=['GET','POST','OPTIONS'])
+# @crossdomain(origin='*')
+def getTrucks():
+    conn,cur = Dbconnect(dictionary = True)
+    res = pd.read_sql_query("SELECT * FROM vehicledata WHERE status!='GT' and Position !='NULL'",conn)
+    return res.to_json(orient = 'records')
+
 
 if __name__ == '__main__':
     app.run(use_reloader=True,debug=True)   

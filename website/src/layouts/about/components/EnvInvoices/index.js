@@ -25,19 +25,18 @@ import MDButton from "components/MDButton";
 import Invoice from "layouts/about/components/Invoice";
 import PropTypes from "prop-types";
 
-import "./style.css";
 import ScrollDialog from "examples/Dialog";
 import { useState } from "react";
+import "./style.css";
 
-function Invoices({ data }) {
-  Invoices.propTypes = {
-    data: PropTypes.any,
+function EnvInvoices({ data }) {
+  EnvInvoices.propTypes = {
+    data: PropTypes.Object,
   };
-
-  const [open, setOpen] = useState(false);
   console.log(data);
   console.log(Object.keys(data));
   const headings = Object.keys(data);
+  const [open, setOpen] = useState(false);
 
   function handleclick() {
     setOpen(true);
@@ -47,33 +46,24 @@ function Invoices({ data }) {
       <Card sx={{ height: "100%" }}>
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            Technical Advantages
+            Environmental Advantages
           </MDTypography>
-          <MDButton variant="outlined" color="info" size="small" onClick={handleclick}>
+          <MDButton variant="outlined" color="info" size="small" onClick={handleclick} data={data}>
             view all
           </MDButton>
-          {/* <Card className="popup" id="popup">
-          <h2>added</h2>
-          <p>ya added it</p>
-          <MDButton variant="outlined" color="info" size="small" onclick="closePopup()">
-            OK
-          </MDButton>
-          <MDButton variant="outlined" color="info" size="small">
-            edit
-          </MDButton>
-        </Card> */}
         </MDBox>
         <MDBox p={2}>
           <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
-            <Invoice date="Traffic Control" id="" price="" />
-            <Invoice date="Automation" id="" price="" />
-            <Invoice date="Predictive Analytics" id="" price="" />
-            <Invoice date="Real-time Monitoring" id="" price="" />
-            <Invoice date="Improved Efficiency" id="" price="" noGutter />
-            {headings.map((heading, i) => {
-              // <Invoice date={heading.toString()} id={i.toString()} price="$250" />;
-              <Invoice date="dummy heading" id="id" price="$250" />;
-            })}
+            <Invoice date="Reduced Emissions" id="" price="" />
+            <Invoice date="Noise Reduction" id="" price="" />
+            <Invoice date="Conservation of Natural Resources" id="" price="" />
+            <Invoice date="Compliance with Regulations" id="" price="" />
+            <Invoice date="Sustainability Initiatives" id="" price="" noGutter />
+
+            {/* {headings.map((heading, i) => {
+            // <Invoice date={heading.toString()} id={i.toString()} price="$250" />;
+            <Invoice date="dummy heading" id="id" price="$250" />;
+          })} */}
           </MDBox>
         </MDBox>
       </Card>
@@ -92,4 +82,4 @@ function closePopup() {
   popup.classList.remove("open-popup");
 }
 
-export default Invoices;
+export default EnvInvoices;

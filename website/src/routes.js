@@ -53,6 +53,7 @@ import PageLayout from "examples/LayoutContainers/PageLayout";
 import About from "layouts/about";
 // import ShowChart from "examples/LayoutContainers/DashboardLayout/ShowChart";
 import PortKPIChart from "examples/LayoutContainers/DashboardLayout/PortKPIChart";
+import Live from "layouts/liveStatus";
 const routes = [
   {
     type: "collapse",
@@ -104,11 +105,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Notifications",
+    name: "Live Status",
     key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
+    icon: <Icon fontSize="small">directions_run</Icon>,
+    route: "/live-status",
+    component: <Live />,
   },
   // {
   //   type: "collapse",
