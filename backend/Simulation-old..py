@@ -1,8 +1,11 @@
+
 import random
 import threading
 import time
 from mysql import connector
 import pandas as pd
+
+# TRUCK + WEIGHBRIDGE + DOCK SIMULATION
 
 def Dbconnect():
     mydb = connector.connect(
@@ -14,19 +17,6 @@ def Dbconnect():
     mycur = mydb.cursor(dictionary=True)
     return mydb, mycur
 
-def clear_all_tables():
-    try:
-        conn, cur = Dbconnect()
-        tables = ['vehicledata', 'weigh_bridge_data', 'dock_data']
-        for table in tables:
-            cur.execute(f"DELETE FROM {table}")
-            print(f"Cleared all rows from {table}")
-        conn.commit()
-        cur.close()
-        conn.close()
-    except Exception as e:
-        print("Error while clearing tables:", str(e))
-
 def updateTruckDB(data):
     conn, cur = Dbconnect()
     result = pd.read_sql_query(
@@ -34,10 +24,12 @@ def updateTruckDB(data):
             data["numberplate"], data["waybill"]), conn)
     res = result.to_records()
     if len(res) > 0:
+        print('exists, updating status')
         cur.execute(
             "UPDATE vehicledata SET Status = '{}' WHERE Licence_Plate = '{}' AND Waybill = '{}'".format(
                 data["Status"], data["numberplate"], data["waybill"]))
         conn.commit()
+        print('updated status')
     else:
         values = (
             data["numberplate"],
@@ -60,49 +52,19 @@ def updateWeighBridgeData(status):
     truck_id = f"T{random.randint(1, 50)}"
     weight = round(random.uniform(5000, 30000), 2)
     time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-
-    # Check if WB_ID exists
-    cur.execute("SELECT * FROM weigh_bridge_data WHERE WB_ID = %s", (weighbridge_id,))
-    result = cur.fetchone()
-
-    if result:
-        cur.execute("""
-            UPDATE weigh_bridge_data 
-            SET Truck_ID = %s, Weight = %s, Status = %s, Timestamp = %s 
-            WHERE WB_ID = %s
-        """, (truck_id, weight, status, time_stamp, weighbridge_id))
-    else:
-        cur.execute("""
-            INSERT INTO weigh_bridge_data (WB_ID, Truck_ID, Weight, Status, Timestamp)
-            VALUES (%s, %s, %s, %s, %s)
-        """, (weighbridge_id, truck_id, weight, status, time_stamp))
-
+    query = "INSERT INTO weigh_bridge_data (WB_ID, Truck_ID, Weight, Status, Timestamp) VALUES (%s, %s, %s, %s, %s)"
+    cur.execute(query, (weighbridge_id, truck_id, weight, status, time_stamp))
     conn.commit()
 
 def updateDockData():
     conn, cur = Dbconnect()
     dock_id = f"D{random.randint(1, 5)}"
-    dock_name = f"Dock {dock_id[-1]}"
+    dock_name = f"Dock {random.randint(1, 5)}"
     port_id = f"P{random.randint(1, 3)}"
     statuses = ["Idle", "Occupied - Loading", "Occupied - Unloading", "Awaiting Truck", "Under Maintenance", "Closed for Inspection"]
     status = random.choice(statuses)
-
-    # Check if Dock_ID exists
-    cur.execute("SELECT * FROM dock_data WHERE Dock_ID = %s", (dock_id,))
-    result = cur.fetchone()
-
-    if result:
-        cur.execute("""
-            UPDATE dock_data 
-            SET Dock_Name = %s, Port_ID = %s, Status = %s 
-            WHERE Dock_ID = %s
-        """, (dock_name, port_id, status, dock_id))
-    else:
-        cur.execute("""
-            INSERT INTO dock_data (Dock_ID, Dock_Name, Port_ID, Status)
-            VALUES (%s, %s, %s, %s)
-        """, (dock_id, dock_name, port_id, status))
-
+    query = "INSERT INTO dock_data (Dock_ID, Dock_Name, Port_ID, Status) VALUES (%s, %s, %s, %s)"
+    cur.execute(query, (dock_id, dock_name, port_id, status))
     conn.commit()
 
 def genVehicalnum():
@@ -173,6 +135,19 @@ def TimeRoute(truck):
 delayed_spawn = threading.Thread(target=spawn)
 delayed_spawn.start()
 
+def clear_all_tables():
+    try:
+        conn, cur = Dbconnect()
+        tables = ['vehicledata', 'weigh_bridge_data', 'dock_data']
+        for table in tables:
+            cur.execute(f"DELETE FROM {table}")
+            print(f"Cleared all rows from {table}")
+        conn.commit()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print("Error while clearing tables:", str(e))
+
 if __name__ == "__main__":
     clear_all_tables()
     print("Starting Simulation...")
@@ -187,18 +162,22 @@ if __name__ == "__main__":
                 if truck['Status'] == "WB":
                     bestroute("to weighBridge")
                     truck['AssignFlag'] = True
-                    threading.Thread(target=TimeRoute, args=([truck])).start()
+                    delayed_spawn = threading.Thread(target=TimeRoute, args=([truck]))
+                    delayed_spawn.start()
                 elif truck['Status'] == "PT":
                     bestroute("to Port")
                     truck['AssignFlag'] = True
-                    threading.Thread(target=TimeRoute, args=([truck])).start()
+                    delayed_spawn = threading.Thread(target=TimeRoute, args=([truck]))
+                    delayed_spawn.start()
                 elif truck['Status'] == "GT":
                     bestroute("to Gate")
                     truck['AssignFlag'] = True
-                    threading.Thread(target=TimeRoute, args=([truck])).start()
+                    delayed_spawn = threading.Thread(target=TimeRoute, args=([truck]))
+                    delayed_spawn.start()
                 elif truck['Status'] == "PK":
                     bestroute("to Parking")
                     truck['AssignFlag'] = True
-                    threading.Thread(target=TimeRoute, args=([truck])).start()
+                    delayed_spawn = threading.Thread(target=TimeRoute, args=([truck]))
+                    delayed_spawn.start()
         Trucks = [item for item in Trucks if "GT" not in item['Status']]
         print("Total No of Truck: ", len(Trucks))

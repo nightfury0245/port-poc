@@ -55,10 +55,16 @@ const WeighBridge = () => {
                   <strong>WB ID</strong>
                 </TableCell>
                 <TableCell>
-                  <strong>WB Name</strong>
+                  <strong>Truck ID</strong>
                 </TableCell>
                 <TableCell>
-                  <strong>Port ID</strong>
+                  <strong>Weight in KG</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Status</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Timestamp</strong>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -66,8 +72,10 @@ const WeighBridge = () => {
               {weighbridges.map((wb, index) => (
                 <TableRow key={index}>
                   <TableCell>{wb.WB_ID}</TableCell>
-                  <TableCell>{wb.WB_Name}</TableCell>
-                  <TableCell>{wb.Port_ID}</TableCell>
+                  <TableCell>{wb.Truck_ID}</TableCell>
+                  <TableCell>{wb.Weight}</TableCell>
+                  <TableCell>{wb.Status}</TableCell>
+                  <TableCell>{wb.Timestamp}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

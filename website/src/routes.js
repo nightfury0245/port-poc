@@ -22,21 +22,8 @@
 
 // Material Dashboard 2 React layouts
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
-// import About from "layouts/about";
-// import RTL from "layouts/rtl";
-import Notifications from "layouts/notifications";
-import Profile from "layouts/profile";
-import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
-import Input from "layouts/input/components";
-
-// @mui icons
 import Icon from "@mui/material/Icon";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import PageLayout from "examples/LayoutContainers/PageLayout";
 import About from "layouts/about";
-// import ShowChart from "examples/LayoutContainers/DashboardLayout/ShowChart";
 import PortKPIChart from "examples/LayoutContainers/DashboardLayout/PortKPIChart";
 import Live from "layouts/liveStatus";
 const routes = [

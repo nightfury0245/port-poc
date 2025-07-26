@@ -134,10 +134,11 @@ def getTrucks():
 @app.route("/api/weighbridges", methods=["GET"])
 def get_all_weighbridges():
     conn, cur = Dbconnect(dictionary=True)
-    cur.execute("SELECT * FROM weigh_bridge_data")
-    data = cur.fetchall()
-    conn.close()
-    return jsonify(data)
+    res = pd.read_sql_query(
+        "SELECT * FROM weigh_bridge_data LIMIT 5",
+        conn,
+    )
+    return res.to_json(orient="records")
 
 
 @app.route("/api/weighbridge", methods=["POST"])
@@ -154,10 +155,11 @@ def add_weighbridge():
 @app.route("/api/docks")
 def get_docks():
     conn, cursor = Dbconnect()
-    cursor.execute("SELECT * FROM dock_data")
-    data = cursor.fetchall()
-    conn.close()
-    return jsonify(data)
+    res = pd.read_sql_query(
+        "SELECT * FROM dock_data LIMIT 5",
+        conn,
+    )
+    return res.to_json(orient="records")
 
 if __name__ == "__main__":
     app.run(use_reloader=True, debug=True)
