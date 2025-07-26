@@ -1,4 +1,5 @@
 from flask_cors import CORS
+     
 from flask import Flask,request,jsonify
 # from config import Config
 from mysql import connector
@@ -12,6 +13,18 @@ CORS(app)
 
 
 def Dbconnect(dictionary):
+    """
+    The function `Dbconnect` establishes a connection to a MySQL database and returns the database
+    connection and cursor based on the input dictionary parameter.
+    
+    :param dictionary: The `dictionary` parameter in the `Dbconnect` function is used to determine
+    whether to return query results as dictionaries or tuples. If `dictionary` is `True`, the cursor
+    will return query results as dictionaries. If `dictionary` is `False` or not provided, the cursor
+    will return query
+    :return: The function `Dbconnect` returns a tuple containing two elements - `mydb` and `mycur`.
+    `mydb` is a connection object to the database, and `mycur` is a cursor object used to interact with
+    the database.
+    """
     print("dictionary : ",dictionary)
     mydb = connector.connect(
     host="localhost",
@@ -29,6 +42,10 @@ def home():
 
 @app.route('/addVehicle',methods=['POST','GET'])
 def insert():
+    """
+    The `insert` function inserts data into a SQL database table using predefined values.
+    :return: The function `insert()` is returning the string '200 OK'.
+    """
     # lpt = request.json("lpt")
     # wbl = request.json("wbl")
     # rfid = request.json("rfid")
