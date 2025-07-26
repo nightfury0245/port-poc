@@ -14,11 +14,17 @@
   },
   "dependencies": {
     "@emotion/cache": "11.10.8",
-    "@emotion/react": "11.10.8",
-    "@emotion/styled": "11.10.8",
+    "@emotion/react": "^11.10.8",
+    "@emotion/styled": "^11.10.8",
     "@mui/icons-material": "5.11.16",
+<<<<<<< HEAD
     "@mui/material": "5.12.3",
     "@mui/x-data-grid": "^6.16.2",
+=======
+    "@mui/material": "^5.12.3",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
+>>>>>>> prod
     "axios": "^1.5.1",
     "chart.js": "^4.4.0",
     "chroma-js": "2.4.2",
@@ -70,8 +76,12 @@
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "4.6.0",
+<<<<<<< HEAD
     "prettier": "2.8.8",
     "vite": "^2.9.16"
+=======
+    "prettier": "2.8.8"
+>>>>>>> prod
   },
   "overrides": {
     "svgo": "3.0.2"
