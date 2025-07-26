@@ -31,6 +31,8 @@ import PaymentMethod from "layouts/about/components/PaymentMethod";
 import Invoices from "layouts/about/components/Invoices";
 import billingInformation from "layouts/about/components/BillingInformation";
 import Transactions from "layouts/about/components/Transactions";
+import EcoInvoices from "./components/EcoInvoices";
+import EnvInvoices from "./components/EnvInvoices";
 
 function About() {
   const Technical_Advantages = {
@@ -100,10 +102,10 @@ function About() {
               {/* </Grid> */}
             </Grid>
             <Grid item xs={12} lg={4}>
-              <Invoices data={Economic_Advantages} />
+              <EcoInvoices data={Economic_Advantages} />
             </Grid>
             <Grid item xs={12} lg={4}>
-              <Invoices data={Environmental_Advantages} />
+              <EnvInvoices data={Environmental_Advantages} />
             </Grid>
           </Grid>
         </MDBox>
