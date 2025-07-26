@@ -1,56 +1,81 @@
-import React from "react";
-export default function StyledTable() {
-  const data = [
-    { id: 1, name: "John Doe", age: 30, city: "New York" },
-    { id: 2, name: "Jane Smith", age: 25, city: "Los Angeles" },
-    { id: 3, name: "Bob Johnson", age: 35, city: "Chicago" },
-    { id: 4, name: "Alice Brown", age: 28, city: "San Francisco" },
-  ];
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  CircularProgress,
+  Box,
+} from "@mui/material";
+
+const WeighBridge = () => {
+  const [weighbridges, setWeighbridges] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchWeighbridges = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/weighbridges");
+      setWeighbridges(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching weighbridge data:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWeighbridges();
+    const interval = setInterval(fetchWeighbridges, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <table style={{ borderCollapse: "collapse", width: "100%" }}>
-      <thead>
-        <tr>
-          <th style={tableHeaderStyle}>ID</th>
-          <th style={tableHeaderStyle}>Name</th>
-          <th style={tableHeaderStyle}>Age</th>
-          <th style={tableHeaderStyle}>City</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((item, index) => (
-          <tr key={item.id} style={index % 2 === 0 ? evenRowStyle : oddRowStyle}>
-            <td style={tableCellStyle}>{item.id}</td>
-            <td style={tableCellStyle}>{item.name}</td>
-            <td style={tableCellStyle}>{item.age}</td>
-            <td style={tableCellStyle}>{item.city}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Card sx={{ margin: 4, boxShadow: 3, borderRadius: 3 }}>
+      <CardContent>
+        <Typography variant="h5" gutterBottom>
+          Weighbridge Status
+        </Typography>
+        {loading ? (
+          <Box display="flex" alignItems="center" justifyContent="center" height="100px">
+            <CircularProgress size={24} />
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              Loading...
+            </Typography>
+          </Box>
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <strong>WB ID</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>WB Name</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Port ID</strong>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {weighbridges.map((wb, index) => (
+                <TableRow key={index}>
+                  <TableCell>{wb.WB_ID}</TableCell>
+                  <TableCell>{wb.WB_Name}</TableCell>
+                  <TableCell>{wb.Port_ID}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </CardContent>
+    </Card>
   );
-}
-
-const tableHeaderStyle = {
-  backgroundColor: "#f2f2f2",
-  padding: "8px",
-  border: "1px solid #ddd",
-  textAlign: "left",
 };
 
-const evenRowStyle = {
-  backgroundColor: "#f2f2f2",
-  padding: "8px",
-  border: "1px solid #ddd",
-};
-
-const oddRowStyle = {
-  backgroundColor: "white",
-  padding: "8px",
-  border: "1px solid #ddd",
-};
-
-const tableCellStyle = {
-  padding: "8px",
-  border: "1px solid #ddd",
-};
+export default WeighBridge;

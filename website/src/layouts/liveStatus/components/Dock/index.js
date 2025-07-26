@@ -1,56 +1,79 @@
-import React from "react";
-export default function StyledTable() {
-  const data = [
-    { id: 1, name: "John Doe", age: 30, city: "New York" },
-    { id: 2, name: "Jane Smith", age: 25, city: "Los Angeles" },
-    { id: 3, name: "Bob Johnson", age: 35, city: "Chicago" },
-    { id: 4, name: "Alice Brown", age: 28, city: "San Francisco" },
-  ];
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
+
+const DockStatus = () => {
+  const [docks, setDocks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchDocks = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/docks");
+      setDocks(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching dock data:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDocks();
+    const interval = setInterval(fetchDocks, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <table style={{ borderCollapse: "collapse", width: "100%" }}>
-      <thead>
-        <tr>
-          <th style={tableHeaderStyle}>ID</th>
-          <th style={tableHeaderStyle}>Name</th>
-          <th style={tableHeaderStyle}>Age</th>
-          <th style={tableHeaderStyle}>City</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((item, index) => (
-          <tr key={item.id} style={index % 2 === 0 ? evenRowStyle : oddRowStyle}>
-            <td style={tableCellStyle}>{item.id}</td>
-            <td style={tableCellStyle}>{item.name}</td>
-            <td style={tableCellStyle}>{item.age}</td>
-            <td style={tableCellStyle}>{item.city}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Paper elevation={3} sx={{ margin: 4, padding: 3 }}>
+      <Typography variant="h5" gutterBottom>
+        Dock Live Status
+      </Typography>
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <strong>Dock ID</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Dock Name</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Port ID</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Status</strong>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {docks.map((dock, index) => (
+                <TableRow key={index}>
+                  <TableCell>{dock.Dock_ID}</TableCell>
+                  <TableCell>{dock.Dock_Name}</TableCell>
+                  <TableCell>{dock.Port_ID}</TableCell>
+                  <TableCell>{dock.Status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+    </Paper>
   );
-}
-
-const tableHeaderStyle = {
-  backgroundColor: "#f2f2f2",
-  padding: "8px",
-  border: "1px solid #ddd",
-  textAlign: "left",
 };
 
-const evenRowStyle = {
-  backgroundColor: "#f2f2f2",
-  padding: "8px",
-  border: "1px solid #ddd",
-};
-
-const oddRowStyle = {
-  backgroundColor: "white",
-  padding: "8px",
-  border: "1px solid #ddd",
-};
-
-const tableCellStyle = {
-  padding: "8px",
-  border: "1px solid #ddd",
-};
+export default DockStatus;
